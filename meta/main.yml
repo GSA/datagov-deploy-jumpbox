@@ -1,9 +1,9 @@
 galaxy_info:
-  author: "GSA and Mobomo"
+  author: "GSA"
   description: "Ansible role to apply configure users on jumpbox"
-  company: GSA and Mobomo
+  company: GSA
   license: MIT
-  min_ansible_version: 2.7
+  min_ansible_version: 2.6
 
   platforms:
   - name: Ubuntu
