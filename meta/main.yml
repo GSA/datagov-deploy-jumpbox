@@ -1,0 +1,14 @@
+galaxy_info:
+  author: "GSA and Mobomo"
+  description: "Ansible role to apply configure users on jumpbox"
+  company: GSA and Mobomo
+  license: MIT
+  min_ansible_version: 2.7
+
+  platforms:
+  - name: Ubuntu
+    versions:
+      - trusty
+      - bionic
+
+dependencies: []
