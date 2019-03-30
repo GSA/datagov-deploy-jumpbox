@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/GSA/datagov-deploy-jumpbox.svg?style=svg)](https://circleci.com/gh/GSA/datagov-deploy-jumpbox)
+
 # gsa.datagov-deploy-jumpbox
 
 This role configures the jumpbox host for access by operators.

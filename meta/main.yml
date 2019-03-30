@@ -1,14 +1,15 @@
+---
 galaxy_info:
   author: "GSA"
   description: "Ansible role to apply configure users on jumpbox"
   company: GSA
-  license: MIT
+  license: CC0-1.0
   min_ansible_version: 2.6
 
   platforms:
-  - name: Ubuntu
-    versions:
-      - trusty
-      - bionic
+    - name: Ubuntu
+      versions:
+        - trusty
+        - bionic
 
 dependencies: []
