@@ -3,6 +3,7 @@
   apt: name={{ item }} update_cache=yes state=present
   with_items:
     # These are mostly dependencies for datagov-deploy's requirements.txt
+    - dsh
     - git
     - libffi-dev
     - libssl-dev
@@ -82,3 +83,15 @@
     state=absent
   when: item.removed is defined
   with_items: "{{ jumpbox_operators }}"
+
+- name: Configure dsh
+  template: src=etc_dsh_dsh.conf.j2 dest=/etc/dsh/dsh.conf mode=0644 owner=root group=root
+
+- name: Configure dsh groups
+  copy:
+    content: "{{ groups[item] | join('\n') }}"
+    dest: /etc/dsh/group/{{ item }}
+    mode: "0644"
+    owner: root
+    group: root
+  loop: "{{ groups | list }}"

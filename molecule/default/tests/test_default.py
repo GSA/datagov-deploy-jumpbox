@@ -32,3 +32,23 @@ def test_removed_user(host):
     passwd = host.file('/etc/passwd')
 
     assert not passwd.contains(removeduser)
+
+
+def test_dsh_all_group(host):
+    group = host.file('/etc/dsh/group/all')
+
+    assert group.exists
+    assert group.mode == 0o644
+    assert group.user == 'root'
+    assert group.group == 'root'
+    assert group.contains("jumpbox1\njumpbox2")
+
+
+def test_dsh_jumpbox_group(host):
+    group = host.file('/etc/dsh/group/jumpbox')
+
+    assert group.exists
+    assert group.mode == 0o644
+    assert group.user == 'root'
+    assert group.group == 'root'
+    assert group.contains("jumpbox1\njumpbox2")
