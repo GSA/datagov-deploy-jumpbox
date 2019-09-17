@@ -12,10 +12,21 @@
     - python-pip
     - python-virtualenv
 
+- name: Create operators group
+  group: name=operators state=present
+
+- name: Create data.gov configuration directory
+  file: path=/etc/datagov state=directory owner=root group=operators mode=0750
+
+- name: Configure ansible
+  copy: src=ansible.cfg dest=/etc/datagov/ansible.cfg owner=root group=operators mode=0644
+
 - name: Create/remove the user account
   user:
     name: "{{ item.username }}"
     comment: "{{ item.email }}"
+    groups:
+      - operators
     shell: /bin/bash
     state: "{{ item.removed is defined and 'absent' or 'present' }}"
     password_lock: yes
