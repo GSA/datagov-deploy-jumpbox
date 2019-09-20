@@ -7,7 +7,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 
 testuser = 'testuser'
-removeduser = 'removeduser'
+inactiveuser = 'inactiveuser'
 testuser_public_key = 'testuser-public-key-string'
 
 
@@ -28,10 +28,12 @@ def test_authorized_keys(host):
     assert authorized_keys.contains(testuser_public_key)
 
 
-def test_removed_user(host):
+def test_inactive_user(host):
     passwd = host.file('/etc/passwd')
+    sudoers = host.file('/etc/sudoers.d/inactiveuser')
 
-    assert not passwd.contains(removeduser)
+    assert not passwd.contains(inactiveuser)
+    assert not sudoers.exists
 
 
 def test_dsh_all_group(host):
