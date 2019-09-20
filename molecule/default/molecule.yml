@@ -25,10 +25,10 @@ provisioner:
           - username: testuser
             email: testuser@example.com
             public_key: ssh-rsa testuser-public-key-string comment
-          - username: removeduser
-            email: removeduser@example.com
-            public_key: ssh-rsa removeduser-public-key-string comment
-            removed: true
+            active: true
+          - username: inactiveuser
+            email: inactiveuser@example.com
+            public_key: ssh-rsa inactiveuser-public-key-string comment
 scenario:
   name: default
   test_sequence:

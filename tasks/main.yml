@@ -17,7 +17,7 @@
     name: "{{ item.username }}"
     comment: "{{ item.email }}"
     shell: /bin/bash
-    state: "{{ item.removed is defined and 'absent' or 'present' }}"
+    state: "{{ item.active | default(false) | ternary('present', 'absent') }}"
     password_lock: yes
     expires: -1
   with_items: "{{ jumpbox_operators }}"
@@ -29,7 +29,7 @@
     mode=0700
     owner={{ item.username }}
     group={{ item.username }}
-  when: item.removed is undefined
+  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Add SSH public key directory structure for ubuntu
@@ -46,7 +46,7 @@
     key: "{{ item.public_key }}"
     exclusive: True
     state: "present"
-  when: item.removed is not defined
+  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Update ssh config with inventory for auto completion
@@ -57,7 +57,7 @@
     group: "{{ item.username }}"
     mode: 0640
     force: no
-  when: item.removed is not defined
+  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Update ssh config with inventory for auto completion for ubuntu user
@@ -74,14 +74,14 @@
     src=sudoers.j2
     dest=/etc/sudoers.d/{{ item.username }}
     mode=0600
-  when: item.removed is not defined
+  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
-- name: Remove sudoers for removed users
+- name: Remove inactive users from sudoers
   file: >-
     dest=/etc/sudoers.d/{{ item.username }}
     state=absent
-  when: item.removed is defined
+  when: not (item.active | default(false))
   with_items: "{{ jumpbox_operators }}"
 
 - name: Configure dsh
