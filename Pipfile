@@ -11,3 +11,6 @@ molecule = {extras = ["docker"],version = "*"}
 
 [requires]
 python_version = "3.6"
+
+[scripts]
+test = "molecule test"
