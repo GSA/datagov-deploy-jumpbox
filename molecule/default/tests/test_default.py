@@ -9,6 +9,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 testuser = 'testuser'
 inactiveuser = 'inactiveuser'
 testuser_public_key = 'testuser-public-key-string'
+ansible_secret_file = '/etc/datagov/ansible-secret.txt'
 
 
 def test_operators_group(host):
@@ -33,6 +34,16 @@ def test_ansible_cfg(host):
     assert ansible_cfg.mode == 0o644
     assert ansible_cfg.user == 'root'
     assert ansible_cfg.group == 'operators'
+
+
+def test_global_environment(host):
+    env = host.file('/etc/profile.d/99datagov.sh')
+
+    assert env.is_file
+    assert env.mode == 0o644
+    assert env.user == 'root'
+    assert env.group == 'root'
+    assert env.contains(ansible_secret_file)
 
 
 def test_user_created(host):

@@ -22,6 +22,9 @@
 - name: Configure ansible
   copy: src=ansible.cfg dest=/etc/datagov/ansible.cfg owner=root group=operators mode=0644
 
+- name: Configure global environment variables
+  copy: src=etc_profile.d_99datagov.sh dest=/etc/profile.d/99datagov.sh owner=root group=root mode=0644
+
 - name: Create/remove the user account
   user:
     name: "{{ item.username }}"
