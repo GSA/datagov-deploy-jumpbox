@@ -101,7 +101,7 @@
 
 - name: Configure dsh groups
   copy:
-    content: "{{ groups[item] | join('\n') }}"
+    content: "{{ groups[item] | sort() | join('\n') }}"
     dest: /etc/dsh/group/{{ item }}
     mode: "0644"
     owner: root
