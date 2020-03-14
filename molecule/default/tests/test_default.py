@@ -1,4 +1,5 @@
 import os
+import re
 
 import testinfra.utils.ansible_runner
 
@@ -59,6 +60,14 @@ def test_inactive_user(host):
 
     assert not passwd.contains(inactiveuser)
     assert not sudoers.exists
+
+
+def test_chage(host):
+    chage = host.check_output('chage -l testuser')
+
+    assert re.search(r'Account expires\s+: never', chage)
+    assert re.search(r'Password expires\s+: never', chage)
+    assert re.search(r'Password inactive\s+: never', chage)
 
 
 def test_dsh_all_group(host):
