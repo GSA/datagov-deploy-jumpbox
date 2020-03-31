@@ -33,6 +33,14 @@
     password_lock: yes
     expires: -1
   with_items: "{{ jumpbox_operators }}"
+  register: user_account
+
+- name: Disable password max age
+  command: chage -I -1 -M -1 {{ item.item.username }}
+  with_items: "{{ user_account.results }}"
+  when:
+    - item.item.active | default(false)
+    - item is changed
 
 - name: Add SSH public key directory structure
   file: >-
