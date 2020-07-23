@@ -14,10 +14,17 @@
     - name: install aptitude for ansible
       apt: name=aptitude state=present cache_valid_time=3600
 
+    - name: Create operators group
+      group: name=operators state=present
+
     - name: create inactive user as active (to be removed)
       user:
-        name: inactiveuser
+        name: "{{ item }}"
+        groups:
+          - operators
         state: present
+      with_items: ["inactiveuser", "removeduser"]
 
     - name: add inactive user to sudoers (to be removed)
-      file: path=/etc/sudoers.d/inactiveuser state=touch owner=root group=root
+      file: 'path=/etc/sudoers.d/{{ item }} state=touch owner=root group=root'
+      with_items: ["inactiveuser", "removeduser"]
