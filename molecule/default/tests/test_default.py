@@ -68,7 +68,7 @@ def test_removed_user(host):
     group = host.file('/etc/group')
 
     assert not passwd.contains(removeduser)
-    assert not group.contains(inactiveuser)
+    assert not group.contains(removeduser)
 
 
 def test_chage(host):
