@@ -44,7 +44,7 @@
   changed_when: false
   register: existing_users
 
-- name: Expand jumpbox_operators for comparison with current users
+- name: Simplify jumpbox_operators as an array for comparison with current users
   set_fact:
     # Sets a list of mount directories
     jumpbox_operators_list: "\
