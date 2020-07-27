@@ -36,7 +36,11 @@
   register: user_account
 
 - name: Determine existing users
-  shell: 'executable=/bin/bash set -o pipefail && grep operators /etc/group | cut -d: -f4 | tr "," "\n"'
+  shell: |
+    set -o pipefail
+    grep operators /etc/group | cut -d: -f4 | tr "," "\n"
+  args:
+    executable: /bin/bash
   changed_when: false
   register: existing_users
 
