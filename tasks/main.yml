@@ -124,12 +124,11 @@
     line: '%operators ALL=(ALL) NOPASSWD: ALL'
     validate: visudo -cf %s
 
-- name: Remove inactive users from sudoers
+- name: Remove all operators users from sudoers
   file: >-
-    dest=/etc/sudoers.d/{{ item.username }}
+    dest=/etc/sudoers.d/{{ item }}
     state=absent
-  when: not (item.active | default(false))
-  with_items: "{{ jumpbox_operators }}"
+  with_items: "{{ existing_users.stdout_lines }}"
 
 - name: Configure dsh
   template: src=etc_dsh_dsh.conf.j2 dest=/etc/dsh/dsh.conf mode=0644 owner=root group=root
