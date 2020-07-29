@@ -8,8 +8,6 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 
 testuser = 'testuser'
-inactiveuser = 'inactiveuser'
-removeduser = 'removeduser'
 testuser_public_key = 'testuser-public-key-string'
 
 
@@ -53,22 +51,6 @@ def test_authorized_keys(host):
 
     assert authorized_keys.exists
     assert authorized_keys.contains(testuser_public_key)
-
-
-def test_inactive_user(host):
-    passwd = host.file('/etc/passwd')
-    group = host.file('/etc/group')
-
-    assert not passwd.contains(inactiveuser)
-    assert not group.contains(inactiveuser)
-
-
-def test_removed_user(host):
-    passwd = host.file('/etc/passwd')
-    group = host.file('/etc/group')
-
-    assert not passwd.contains(removeduser)
-    assert not group.contains(removeduser)
 
 
 def test_chage(host):
