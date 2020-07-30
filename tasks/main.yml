@@ -128,7 +128,7 @@
   file: >-
     dest=/etc/sudoers.d/{{ item }}
     state=absent
-  with_items: "{{ existing_users.stdout_lines }}"
+  with_items: "{{ existing_users.stdout_lines + jumpbox_operators_list }}"
 
 - name: Configure dsh
   template: src=etc_dsh_dsh.conf.j2 dest=/etc/dsh/dsh.conf mode=0644 owner=root group=root
