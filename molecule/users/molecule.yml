@@ -22,13 +22,9 @@ provisioner:
     group_vars:
       jumpbox:
         jumpbox_operators:
-          - username: inactiveuser
-            email: inactiveuser@example.com
-            public_key: ssh-rsa inactiveuser-public-key-string comment
           - username: testuser
             email: testuser@example.com
             public_key: ssh-rsa testuser-public-key-string comment
-            active: true
 scenario:
   name: users
   test_sequence:
