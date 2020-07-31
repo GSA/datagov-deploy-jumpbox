@@ -25,7 +25,6 @@ provisioner:
           - username: testuser
             email: testuser@example.com
             public_key: ssh-rsa testuser-public-key-string comment
-            active: true
 scenario:
   name: default
   test_sequence:

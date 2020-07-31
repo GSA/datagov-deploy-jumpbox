@@ -29,7 +29,7 @@
     groups:
       - operators
     shell: /bin/bash
-    state: "{{ item.active | default(false) | ternary('present', 'absent') }}"
+    state: "present"
     password_lock: yes
     expires: -1
   with_items: "{{ jumpbox_operators }}"
@@ -76,7 +76,6 @@
     mode=0700
     owner={{ item.username }}
     group={{ item.username }}
-  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Add SSH public key directory structure for ubuntu
@@ -93,7 +92,6 @@
     key: "{{ item.public_key }}"
     exclusive: True
     state: "present"
-  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Update ssh config with inventory for auto completion
@@ -104,7 +102,6 @@
     group: "{{ item.username }}"
     mode: 0640
     force: no
-  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Update ssh config with inventory for auto completion for ubuntu user

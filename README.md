@@ -34,8 +34,7 @@ Example Playbook
 **jumpbox_operators** list<object>
 
 The user accounts to create on the jumpbox. User objects should include
-a `username`, `email`, `public_key` (contents of the users id_rsa.pub), and
-`active`. The user's `authorized_keys` is set exclusively to this key, so any modifications to
+a `username`, `email`, and `public_key` (contents of the users id_rsa.pub). The user's `authorized_keys` is set exclusively to this key, so any modifications to
 `authorized_keys` will be overridden the next time this role is run.
 
 ```
@@ -43,11 +42,9 @@ jumpbox_operators:
   - username: userone
     email: userone@example.com
     public_key: ssh-rsa aabbccddeeff1234567890 comment
-    active: true
 ```
 
 - `username` (required) name of the user account to create
 - `email` (required) email address of the user
 - `public_key` (required) the public SSH key for the user (contents of
   id_rsa.pub)
-- `active` (default: false) active users are created, inactive users are removed
