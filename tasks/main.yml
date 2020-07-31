@@ -29,11 +29,38 @@
     groups:
       - operators
     shell: /bin/bash
-    state: "{{ item.active | default(false) | ternary('present', 'absent') }}"
+    state: "present"
     password_lock: yes
     expires: -1
   with_items: "{{ jumpbox_operators }}"
   register: user_account
+
+- name: Determine existing users
+  shell: |
+    set -o pipefail
+    grep operators /etc/group | cut -d: -f4 | tr "," "\n"
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: existing_users
+
+- name: Simplify jumpbox_operators as an array for comparison with current users
+  set_fact:
+    # Sets a list of mount directories
+    jumpbox_operators_list: "\
+      {{ jumpbox_operators_list | default([]) }} + \
+      [ '{{ item['username'] }}' ]"
+  with_items: "{{ jumpbox_operators }}"
+
+- name: Determine users to remove
+  set_fact:
+    removed_users: "{{ existing_users.stdout_lines | difference(jumpbox_operators_list) }}"
+
+- name: Delete user accounts no longer registered
+  user:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ removed_users }}"
 
 - name: Disable password max age
   command: chage -I -1 -M -1 {{ item.item.username }}
@@ -49,7 +76,6 @@
     mode=0700
     owner={{ item.username }}
     group={{ item.username }}
-  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Add SSH public key directory structure for ubuntu
@@ -66,7 +92,6 @@
     key: "{{ item.public_key }}"
     exclusive: True
     state: "present"
-  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Update ssh config with inventory for auto completion
@@ -77,7 +102,6 @@
     group: "{{ item.username }}"
     mode: 0640
     force: no
-  when: item.active | default(false)
   with_items: "{{ jumpbox_operators }}"
 
 - name: Update ssh config with inventory for auto completion for ubuntu user
@@ -89,20 +113,19 @@
     mode: 0640
     force: no
 
-- name: Update the system /etc/sudoers file
-  template: >-
-    src=sudoers.j2
-    dest=/etc/sudoers.d/{{ item.username }}
-    mode=0600
-  when: item.active | default(false)
-  with_items: "{{ jumpbox_operators }}"
+- name: Allow 'operators' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%operators'
+    line: '%operators ALL=(ALL) NOPASSWD: ALL'
+    validate: visudo -cf %s
 
-- name: Remove inactive users from sudoers
+- name: Remove all operators users from sudoers
   file: >-
-    dest=/etc/sudoers.d/{{ item.username }}
+    dest=/etc/sudoers.d/{{ item }}
     state=absent
-  when: not (item.active | default(false))
-  with_items: "{{ jumpbox_operators }}"
+  with_items: "{{ existing_users.stdout_lines + jumpbox_operators_list }}"
 
 - name: Configure dsh
   template: src=etc_dsh_dsh.conf.j2 dest=/etc/dsh/dsh.conf mode=0644 owner=root group=root

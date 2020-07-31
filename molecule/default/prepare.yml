@@ -13,11 +13,3 @@
 
     - name: install aptitude for ansible
       apt: name=aptitude state=present cache_valid_time=3600
-
-    - name: create inactive user as active (to be removed)
-      user:
-        name: inactiveuser
-        state: present
-
-    - name: add inactive user to sudoers (to be removed)
-      file: path=/etc/sudoers.d/inactiveuser state=touch owner=root group=root

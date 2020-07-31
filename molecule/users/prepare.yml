@@ -1,0 +1,30 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: create ubuntu user
+      user:
+        name: ubuntu
+        comment: ubuntu
+        shell: /bin/bash
+        state: present
+        password_lock: yes
+        expires: -1
+
+    - name: install aptitude for ansible
+      apt: name=aptitude state=present cache_valid_time=3600
+
+    - name: Create operators group
+      group: name=operators state=present
+
+    - name: create inactive user as active (to be removed)
+      user:
+        name: "{{ item }}"
+        groups:
+          - operators
+        state: present
+      with_items: ["inactiveuser", "testuser"]
+
+    - name: add inactive user to sudoers (to be removed)
+      file: 'path=/etc/sudoers.d/{{ item }} state=touch owner=root group=root'
+      with_items: ["inactiveuser"]

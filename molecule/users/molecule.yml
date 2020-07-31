@@ -26,7 +26,7 @@ provisioner:
             email: testuser@example.com
             public_key: ssh-rsa testuser-public-key-string comment
 scenario:
-  name: default
+  name: users
   test_sequence:
     - lint
     - destroy
