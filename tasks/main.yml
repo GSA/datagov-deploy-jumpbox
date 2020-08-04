@@ -101,7 +101,6 @@
     owner: "{{ item.username }}"
     group: "{{ item.username }}"
     mode: 0640
-    force: no
   with_items: "{{ jumpbox_operators }}"
 
 - name: Update ssh config with inventory for auto completion for ubuntu user
