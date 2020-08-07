@@ -48,7 +48,7 @@
   set_fact:
     # Sets a list of mount directories
     jumpbox_operators_list: "\
-      {{ jumpbox_operators_list | default([]) }} + \
+      {{ jumpbox_operators_list | default(['ubuntu']) }} + \
       [ '{{ item['username'] }}' ]"
   with_items: "{{ jumpbox_operators }}"
 

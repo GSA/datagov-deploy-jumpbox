@@ -2,6 +2,9 @@
 - name: Prepare
   hosts: all
   tasks:
+    - name: Create operators group
+      group: name=operators state=present
+
     - name: create ubuntu user
       user:
         name: ubuntu
@@ -10,12 +13,11 @@
         state: present
         password_lock: yes
         expires: -1
+        groups:
+          - operators
 
     - name: install aptitude for ansible
       apt: name=aptitude state=present cache_valid_time=3600
-
-    - name: Create operators group
-      group: name=operators state=present
 
     - name: create inactive user as active (to be removed)
       user:
