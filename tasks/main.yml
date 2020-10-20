@@ -16,13 +16,19 @@
 - name: Create operators group
   group: name=operators state=present
 
+- name: Add ubuntu user to operators group
+  user:
+    name: ubuntu
+    groups:
+      - operators
+
 - name: Create data.gov configuration directory
   file: path=/etc/datagov state=directory owner=root group=operators mode=0750
 
 - name: Configure ansible
   copy: src=ansible.cfg dest=/etc/datagov/ansible.cfg owner=root group=operators mode=0644
 
-- name: Create/remove the user account
+- name: Create operator accounts
   user:
     name: "{{ item.username }}"
     comment: "{{ item.email }}"
@@ -35,10 +41,10 @@
   with_items: "{{ jumpbox_operators }}"
   register: user_account
 
-- name: Determine existing users
+- name: Determine existing operators
   shell: |
     set -o pipefail
-    grep operators /etc/group | cut -d: -f4 | tr "," "\n"
+    grep operators /etc/group | cut -d: -f4 | tr "," "\n" | grep -v "^ubuntu$"
   args:
     executable: /bin/bash
   changed_when: false

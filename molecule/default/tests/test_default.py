@@ -17,6 +17,17 @@ def test_operators_group(host):
     assert operators.exists
 
 
+def test_ubuntu_user(host):
+    """Test ubuntu user exists and is part of the operators group."""
+    user = host.user('ubuntu')
+
+    assert user.exists
+    assert 'operators' in user.groups
+    assert 'ubuntu' in user.groups
+    assert user.expiration_date is None
+    assert user.password == '!', 'user password should be locked'
+
+
 def test_datagov_configuration_dir(host):
     datagov = host.file('/etc/datagov')
 
