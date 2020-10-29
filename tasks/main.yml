@@ -143,3 +143,8 @@
     owner: root
     group: root
   loop: "{{ groups | list }}"
+
+- name: Increase TMUX scrollback buffer size
+  copy:
+    content: "set-option -g history-limit 20000"
+    dest: /home/ubuntu/.tmux.conf
