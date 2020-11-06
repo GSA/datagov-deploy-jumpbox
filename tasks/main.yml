@@ -148,3 +148,18 @@
   copy:
     content: "set-option -g history-limit 20000"
     dest: /home/ubuntu/.tmux.conf
+
+- name: Create folder for ansible playbook logs
+  file:
+    path: /home/ubuntu/datagov-deploy/ansible/logs
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: 0775
+
+- name: Add ANSIBLE_LOG_PATH to env
+  lineinfile:
+    path: /home/ubuntu/datagov-deploy/.env
+    state: present
+    create: yes
+    line: 'ANSIBLE_LOG_PATH=/home/ubuntu/datagov-deploy/ansible/logs/ansible.log'
