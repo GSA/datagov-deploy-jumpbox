@@ -120,6 +120,14 @@
     mode: 0640
     force: no
 
+- name: Update shell prompt for operators
+  lineinfile:
+    dest: /home/{{ item.username }}/.bashrc
+    line: PS1='{{ jumpbox_shell_prompt }}'
+    state: present
+  with_items: "{{ jumpbox_operators }}"
+  when: jumpbox_shell_prompt is defined
+
 - name: Allow 'operators' group to have passwordless sudo
   lineinfile:
     dest: /etc/sudoers
