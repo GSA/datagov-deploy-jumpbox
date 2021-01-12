@@ -109,6 +109,8 @@
     mode: 0640
   with_items: "{{ jumpbox_operators }}"
 
+# TODO move the ssh config into ansible
+# We use `force: no` here because v1 hosts are using the old ssh key.
 - name: Update ssh config with inventory for auto completion for ubuntu user
   template:
     dest: /home/ubuntu/.ssh/config
@@ -117,6 +119,14 @@
     group: ubuntu
     mode: 0640
     force: no
+
+- name: Update shell prompt for operators
+  lineinfile:
+    dest: /home/{{ item.username }}/.bashrc
+    line: PS1='{{ jumpbox_shell_prompt }}'
+    state: present
+  with_items: "{{ jumpbox_operators }}"
+  when: jumpbox_shell_prompt is defined
 
 - name: Allow 'operators' group to have passwordless sudo
   lineinfile:
